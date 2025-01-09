@@ -6,6 +6,7 @@ require Pod::Executable.execute_command('node', ['-p',
   )', __dir__]).strip
 
 platform :ios, min_ios_version_supported
+# use_modular_headers!
 prepare_react_native_project!
 
 linkage = ENV['USE_FRAMEWORKS']
@@ -16,12 +17,22 @@ end
 
 target 'FrmscMobileApp' do
   config = use_native_modules!
+  use_frameworks! :linkage => :static
+  $RNFirebaseAsStaticFramework = true
 
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
+  #  Add Firebase dependencies with modular headers enabled
+  #  pod 'Firebase/Core', :modular_headers => true
+  #  pod 'Firebase/Auth', :modular_headers => true
+  #  pod 'Firebase/Firestore', :modular_headers => true
+  #  pod 'Firebase/Messaging', :modular_headers => true
+  #  pod 'gRPC-C++', '~> 1.51.1'
+  # pod 'gRPC-Core', '~> 1.51.1'
 
   target 'FrmscMobileAppTests' do
     inherit! :complete
